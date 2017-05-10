@@ -8,7 +8,7 @@ public class GameWindow extends JFrame
     
     public GameWindow()
     {
-        add(new GameIO(1));
+        add(new GameIO());
         setSize(WIDTH + BORDER_WIDTH, HEIGHT + BORDER_HEIGHT);
         setLocationRelativeTo(null);
         setResizable(false);

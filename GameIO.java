@@ -1,6 +1,5 @@
 import java.awt.event.*;
 import javax.swing.*;
-import java.awt.Graphics2D;
 import java.awt.Graphics;
 import java.awt.geom.*;
 import java.awt.Toolkit;
@@ -8,21 +7,19 @@ import java.awt.Dimension;
 import java.awt.Color;
 public class GameIO extends JComponent implements ActionListener, KeyListener
 {
-    public static final int PLAYER_1 = 1, PLAYER_2 = 2;
     public static final int cWidth = 50, cHeight = 50;
     private int xIncrement = 0, yIncrement = 0, xLoc = 0, yLoc = 0;
-    private Timer t = new Timer(100, this);
-    private int[] playerControls;
-    private static final int[] player1Controls = {KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D};
-    private static final int[] player2Controls = {KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT};
+    private Timer t = new Timer(5, this);
+    private Player player1, player2; //two separate players
+    private boolean keyIsDown1, keyIsDown2; //checks if the player is pressing a button
 
-    public GameIO(int player)
+    public GameIO()
     {
         super();
-        if (player == 1)
-            playerControls = player1Controls;
-        if (player == 2)
-            playerControls = player2Controls;
+        player1 = new Player(1);
+        player1.setLoc(0, 0);
+        player2 = new Player(2);
+        player2.setLoc(GameWindow.WIDTH - cWidth, GameWindow.HEIGHT - cHeight);
         t.start();
         addKeyListener(this);
         setFocusable(true);
@@ -34,8 +31,11 @@ public class GameIO extends JComponent implements ActionListener, KeyListener
         super.paintComponent(g);
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, GameWindow.WIDTH, GameWindow.HEIGHT);
+        g.setColor(Color.BLUE);
+        g.fillOval(player1.getX(), player1.getY(), cWidth, cHeight);
         g.setColor(Color.WHITE);
-        g.fillRect(xLoc, yLoc, cWidth, cHeight);
+        g.fillOval(player2.getX(), player2.getY(), cWidth, cHeight);
+        g.setColor(Color.GREEN);
         for (int row = 0; row <= GameWindow.HEIGHT; row += cHeight)
         {
             g.drawLine(0, row, GameWindow.WIDTH, row);
@@ -50,20 +50,59 @@ public class GameIO extends JComponent implements ActionListener, KeyListener
     public void keyPressed(KeyEvent e)
     {
         int keyCode = e.getKeyCode();
-        if(keyCode == playerControls[0])
-            up();
-        if(keyCode == playerControls[1])
-            down();
-        if(keyCode == playerControls[2])
-            left();
-        if(keyCode == playerControls[3])
-            right();
+        //player1 controls
+        boolean canMove1 = !player1.collideAfterMovement(player2, e);
+        boolean canMove2 = !player2.collideAfterMovement(player1, e);
+        if(keyCode == player1.getControls()[0]) //up for player 1
+        {
+            if (player1.getDirection() != Player.NORTH)
+                player1.changeDirection(Player.NORTH);
+            else if (canMove1)
+                player1.setInc(0, -cHeight);
+        }
+        if(keyCode == player1.getControls()[1]) //down for player 1
+        {
+            if (player1.getDirection() != Player.SOUTH)
+                player1.changeDirection(Player.SOUTH);
+            else if (canMove1)
+                player1.setInc(0, cHeight);
+        }
+        if(keyCode == player1.getControls()[2])
+        {
+            if (player1.getDirection() != Player.WEST)
+                player1.changeDirection(Player.WEST);
+            else if (canMove1)
+                player1.setInc(-cWidth, 0);
+        }
+        if(keyCode == player1.getControls()[3])
+        {
+            if (player1.getDirection() != Player.WEST)
+                player1.changeDirection(Player.WEST);
+            else if (canMove1)
+                player1.setInc(cWidth, 0);
+        }
+        //player2 controls
+        if(keyCode == player2.getControls()[0])
+        {
+            player2.setInc(0, -cHeight);
+        }
+        if(keyCode == player2.getControls()[1])
+        {
+            player2.setInc(0, cHeight);
+        }
+        if(keyCode == player2.getControls()[2])
+        {
+            player2.setInc(-cWidth, 0);
+        }
+        if(keyCode == player2.getControls()[3])
+        {
+            player2.setInc(cWidth, 0);
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e)
     {
-
     }
 
     @Override
@@ -76,39 +115,9 @@ public class GameIO extends JComponent implements ActionListener, KeyListener
     public void actionPerformed(ActionEvent e)
     {
         repaint();
-        xLoc = Utility.truncate(xLoc + xIncrement, 0, GameWindow.WIDTH - cWidth);
-        yLoc = Utility.truncate(yLoc + yIncrement, 0, GameWindow.HEIGHT - cHeight);
-        xIncrement = 0;
-        yIncrement = 0;
-    }
-
-    public void up()
-    {
-        xIncrement = 0;
-        yIncrement = -cHeight;
-    }
-
-    public void down()
-    {
-        xIncrement = 0;
-        yIncrement = cHeight;
-    }
-
-    public void left()
-    {
-        xIncrement = -cWidth;
-        yIncrement = 0;
-    }
-
-    public void right()
-    {
-        xIncrement = cWidth;
-        yIncrement = 0;
-    }
-
-    public void stay()
-    {
-        xIncrement = 0;
-        yIncrement = 0;
+        player1.move();
+        player2.move();
+        player1.setInc(0, 0);
+        player2.setInc(0, 0);
     }
 }
