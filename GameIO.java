@@ -18,8 +18,6 @@ public class GameIO extends JComponent implements ActionListener, KeyListener
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
-        board[0][0] = new Player(Player.PLAYER_1, Color.RED);
-        board[board.length-1][board[0].length-1] = new Player(Player.PLAYER_2, Color.BLUE);
     }
 
     public void paintComponent(Graphics g)

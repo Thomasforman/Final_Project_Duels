@@ -68,11 +68,13 @@ public class Player extends GamePiece
 
     public boolean collideAfterMovement(int row, int col, GamePiece[][] board)
     {
+        int newRow = Utility.truncate(row + yIncrement, 0, board.length - 1);
+        int newCol = Utility.truncate(col + xIncrement, 0, board[row].length - 1);
         if (row == 0 && direction == NORTH || row == board.length-1 && direction == SOUTH || col == 0 && direction == WEST || col == board[row].length-1 && direction == EAST)
             return true;
-        else if (board[row + yIncrement][col + xIncrement] == null)
+        else if (board[newRow][newCol] == null)
             return false;
-        else if (board[row + yIncrement][col + xIncrement].doesCollide())
+        else if (board[newRow][newCol].doesCollide())
             return true;
         else
             return false;
