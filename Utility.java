@@ -14,4 +14,14 @@ public class Utility
     {
         return row * GameIO.cHeight;
     }
+    
+    public static int[] addToArray(int[] arr, int num)
+    {
+        int[] result = new int[arr.length];
+        for (int i = 0; i < result.length; i++)
+        {
+            result[i] = arr[i] + num;
+        }
+        return result;
+    }
 }
