@@ -1,11 +1,16 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import javafx.geometry.BoundingBox;
 public class Wall extends Obstacle
 {
-    public Wall()
+    public Wall(int xStart, int yStart, String imageName)
     {
-        super();
+        super(imageName);
         setCollision(true);
+        xLoc = xStart;
+        yLoc = yStart;
+        bounds.add(new BoundingBox(xStart, yStart, GameIO.cWidth, GameIO.cHeight));
     }
 
     public void doPlayerEffect(Player p)
@@ -13,20 +18,13 @@ public class Wall extends Obstacle
 
     }
 
-    public void draw(int row, int col, Graphics g)
+    public void draw(Graphics g)
     {
-        int xLoc = Utility.getXOnBoard(col);
-        int yLoc = Utility.getYOnBoard(row);
         g.setColor(Color.WHITE);
         g.fillRect(xLoc, yLoc, GameIO.cWidth, GameIO.cHeight);
     }
 
-    public boolean collideAfterMovement(int row, int col, GamePiece[][] board)
-    {
-        return false;
-    }
-
-    public void updateGameState(int row, int col, GamePiece[][] board)
+    public void updateGameState(ArrayList<GamePiece> entities)
     {
 
     }

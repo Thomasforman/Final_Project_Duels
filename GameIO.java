@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class GameIO extends JComponent implements ActionListener, KeyListener
 {
     public static final int cWidth = 64, cHeight = 64;
-    private Timer t = new Timer(5, this);
+    private Timer t = new Timer(3, this);
     private ArrayList<GamePiece> entities = new ArrayList<GamePiece>();
 
     public GameIO()

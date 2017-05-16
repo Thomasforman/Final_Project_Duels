@@ -106,26 +106,26 @@ public class Player extends GamePiece
 
     public void up()
     {
-        //xIncrement = 0;
+        xIncrement = 0;
         yIncrement = -Constants.Y_VELV;
     }
 
     public void down()
     {
-        //xIncrement = 0;
+        xIncrement = 0;
         yIncrement = Constants.Y_VELV;
     }
 
     public void left()
     {
         xIncrement = -Constants.X_VELV;
-        //yIncrement = 0;
+        yIncrement = 0;
     }
 
     public void right()
     {
         xIncrement = Constants.X_VELV;
-        //yIncrement = 0;
+        yIncrement = 0;
     }
 
     public void reset()
