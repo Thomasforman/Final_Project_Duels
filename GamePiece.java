@@ -1,15 +1,24 @@
 import java.awt.Graphics;
-import java.util.ArrayList;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
+import java.io.IOException;
 import javafx.geometry.BoundingBox;
+import java.util.ArrayList;
 public abstract class GamePiece
 {
     private boolean collision;
+    protected BufferedImage image;
     protected ArrayList<BoundingBox> bounds;
     protected int xLoc, yLoc;
 
-    public GamePiece()
+    public GamePiece(String imageName)
     {
-        collision = true;
+        collision = true;	
+        try {
+            image = ImageIO.read(new File(imageName));
+        } catch (IOException e) {
+        }
         bounds = new ArrayList<BoundingBox>();
     }
 
@@ -49,7 +58,12 @@ public abstract class GamePiece
         return false;
     }
 
-    public void updateBoundingBox(int xIncrement, int yIncrement)
+    public ArrayList<BoundingBox> getBounds()
+    {
+        return new ArrayList<BoundingBox>(bounds);
+    }
+
+    public void updateBoundingBox(int xIncrement, int yIncrement) //contains how the object collides
     {
         if (xIncrement == 0 && yIncrement == 0)
         {
@@ -65,9 +79,5 @@ public abstract class GamePiece
     public abstract void updateGameState(ArrayList<GamePiece> entities);
 
     public abstract void draw(Graphics g);
-    
-    public ArrayList<BoundingBox> getBounds()
-    {
-        return new ArrayList<BoundingBox>(bounds);
-    }
+
 }

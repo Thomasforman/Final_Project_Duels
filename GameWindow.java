@@ -3,19 +3,10 @@ import java.awt.Toolkit;
 import javax.swing.*;
 public class GameWindow extends JFrame
 {
-    public static final int WIDTH = 500, HEIGHT = 500;
+    public static final int NUM_ROWS = 10, NUM_COLS = 10;
+    public static final int WIDTH = NUM_ROWS * GameIO.cHeight, HEIGHT = NUM_COLS * GameIO.cWidth;
     private int BORDER_HEIGHT = 30, BORDER_WIDTH = 7;
     GameIO gameIO = new GameIO();
-
-    public GameWindow()
-    {
-        add(gameIO);
-    }
-    
-    public GameIO getIO()
-    {
-        return gameIO;
-    }
 
     public void initialize()
     {
@@ -23,7 +14,7 @@ public class GameWindow extends JFrame
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Duels");
+        setTitle("GameWindow");
         setVisible(true);
     }
 }

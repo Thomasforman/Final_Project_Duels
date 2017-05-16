@@ -4,34 +4,34 @@ import java.awt.Graphics;
 import java.awt.Dimension;
 import java.awt.Color;
 import java.util.ArrayList;
+import javafx.geometry.BoundingBox;
 public class Player extends GamePiece
 {
     private int health, recovery, attack;
-    private int xIncrement, yIncrement, direction, xVelv = 3, yVelv = 3;
+    private int xIncrement, yIncrement, direction;
     private Color playerColor;
-    public static final int PLAYER_1 = 1, PLAYER_2 = 2, NORTH = 1001, EAST = 1002, SOUTH = 1003, WEST = 1004;
     private int[] playerControls;
-    public static final int[] player1Controls = {KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D}, player2Controls = {KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT};
     private static final int[] xSetNorth = {GameIO.cWidth/2, 0, GameIO.cWidth}, xSetSouth = xSetNorth, xSetWest = {0, GameIO.cWidth, GameIO.cWidth}, xSetEast = {GameIO.cWidth, 0, 0};
     private static final int[] ySetNorth = {0, GameIO.cHeight, GameIO.cHeight}, ySetSouth = {GameIO.cHeight, 0, 0}, ySetWest = {GameIO.cHeight/2, 0, GameIO.cHeight}, ySetEast = ySetWest;
-    private static final int sides = 3;
 
-    public Player(int player , Color c)
+    public Player(int xStart, int yStart, int player, String imageName)
     {
-        super();
+        super(imageName);
         setCollision(true);
-        player = Utility.truncate(player, PLAYER_1, PLAYER_2);
+        player = Utility.truncate(player, Constants.PLAYER_1, Constants.PLAYER_2);
         if (player == 1)
         {
-            playerControls = player1Controls;
-            direction = SOUTH;
+            playerControls = Constants.player1Controls;
+            direction = Constants.SOUTH;
         }
         if (player == 2)
         {
-            playerControls = player2Controls;
-            direction = NORTH;
+            playerControls = Constants.player2Controls;
+            direction = Constants.NORTH;
         }
-        playerColor = c;
+        xLoc = xStart;
+        yLoc = yStart;
+        bounds.add(new BoundingBox(xStart, yStart, 64, 64));
     }
 
     public void respondToKeyPressed(KeyEvent e)
@@ -39,22 +39,22 @@ public class Player extends GamePiece
         int keyCode = e.getKeyCode();
         if (keyCode == playerControls[0])
         {
-            direction = NORTH;
+            direction = Constants.NORTH;
             up();
         }
         if (keyCode == playerControls[1])
         {
-            direction = SOUTH;
+            direction = Constants.SOUTH;
             down();
         }
         if (keyCode == playerControls[2])
         {
-            direction = WEST;
+            direction = Constants.WEST;
             left();
         }
         if (keyCode == playerControls[3])
         {
-            direction = EAST;
+            direction = Constants.EAST;
             right();
         }
     }
@@ -72,13 +72,12 @@ public class Player extends GamePiece
             yLoc += yIncrement;
             updateBoundingBox(xIncrement, yIncrement);
         }
-        //reset();
     }
 
     public void draw(Graphics g)
     {
-        g.setColor(playerColor);
-        g.fillOval(xLoc, yLoc, GameIO.cWidth, GameIO.cHeight);
+        g.setColor(Color.WHITE);
+        g.drawImage(image, xLoc, yLoc, null);
         /*
         int[] xLocs, yLocs;
         if (direction == NORTH)
@@ -107,26 +106,26 @@ public class Player extends GamePiece
 
     public void up()
     {
-        xIncrement = 0;
-        yIncrement = -yVelv;
+        //xIncrement = 0;
+        yIncrement = -Constants.Y_VELV;
     }
 
     public void down()
     {
-        xIncrement = 0;
-        yIncrement = yVelv;
+        //xIncrement = 0;
+        yIncrement = Constants.Y_VELV;
     }
 
     public void left()
     {
-        xIncrement = -xVelv;
-        yIncrement = 0;
+        xIncrement = -Constants.X_VELV;
+        //yIncrement = 0;
     }
 
     public void right()
     {
-        xIncrement = xVelv;
-        yIncrement = 0;
+        xIncrement = Constants.X_VELV;
+        //yIncrement = 0;
     }
 
     public void reset()
@@ -138,5 +137,15 @@ public class Player extends GamePiece
     public int getDirection()
     {
         return direction;
+    }
+
+    public void addHealth(int add)
+    {
+        health += add;
+    }
+
+    public int getHealth()
+    {
+        return health;
     }
 }

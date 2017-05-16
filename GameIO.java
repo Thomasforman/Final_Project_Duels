@@ -1,14 +1,11 @@
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.Graphics;
-import java.awt.geom.*;
-import java.awt.Toolkit;
-import java.awt.Dimension;
 import java.awt.Color;
 import java.util.ArrayList;
 public class GameIO extends JComponent implements ActionListener, KeyListener
 {
-    public static final int cWidth = 50, cHeight = 50;
+    public static final int cWidth = 64, cHeight = 64;
     private Timer t = new Timer(5, this);
     private ArrayList<GamePiece> entities = new ArrayList<GamePiece>();
 
@@ -32,15 +29,17 @@ public class GameIO extends JComponent implements ActionListener, KeyListener
             piece.draw(g);
         }
         //draws gridlines
+        /*
         g.setColor(Color.GREEN);
         for (int row = 0; row <= GameWindow.HEIGHT; row += cHeight)
         {
-            g.drawLine(0, row, GameWindow.WIDTH, row);
+        g.drawLine(0, row, GameWindow.WIDTH, row);
         }
         for (int col = 0; col <= GameWindow.WIDTH; col += cWidth)
         {
-            g.drawLine(col, 0, col, GameWindow.HEIGHT);
+        g.drawLine(col, 0, col, GameWindow.HEIGHT);
         }
+         */
     }
 
     @Override
@@ -58,7 +57,7 @@ public class GameIO extends JComponent implements ActionListener, KeyListener
     @Override
     public void keyReleased(KeyEvent e)
     {
-        for (GamePiece g : entities)
+        for (GamePiece g: entities)
         {
             if (g instanceof Player)
             {
@@ -82,7 +81,7 @@ public class GameIO extends JComponent implements ActionListener, KeyListener
             g.updateGameState(entities);
         }
     }
-    
+
     public void addPiece(GamePiece g)
     {
         if (g instanceof Player)
