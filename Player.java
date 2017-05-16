@@ -3,10 +3,11 @@ import javax.swing.*;
 import java.awt.Graphics;
 import java.awt.Dimension;
 import java.awt.Color;
+import java.util.ArrayList;
 public class Player extends GamePiece
 {
     private int health, recovery, attack;
-    private int xIncrement, yIncrement, direction;
+    private int xIncrement, yIncrement, direction, xVelv = 3, yVelv = 3;
     private Color playerColor;
     public static final int PLAYER_1 = 1, PLAYER_2 = 2, NORTH = 1001, EAST = 1002, SOUTH = 1003, WEST = 1004;
     private int[] playerControls;
@@ -33,113 +34,98 @@ public class Player extends GamePiece
         playerColor = c;
     }
 
-    public void respondToKeyPressed(int row, int col, KeyEvent e)
+    public void respondToKeyPressed(KeyEvent e)
     {
         int keyCode = e.getKeyCode();
         if (keyCode == playerControls[0])
         {
-            if (direction != NORTH)
-                direction = NORTH;
-            else
-                up();
+            direction = NORTH;
+            up();
         }
         if (keyCode == playerControls[1])
         {
-            if (direction != SOUTH)
-                direction = SOUTH;
-            else
-                down();
+            direction = SOUTH;
+            down();
         }
         if (keyCode == playerControls[2])
         {
-            if (direction != WEST)
-                direction = WEST;
-            else
-                left();
+            direction = WEST;
+            left();
         }
         if (keyCode == playerControls[3])
         {
-            if (direction != EAST)
-                direction = EAST;
-            else
-                right();
+            direction = EAST;
+            right();
         }
     }
 
-    public boolean collideAfterMovement(int row, int col, GamePiece[][] board)
+    public void respondToKeyReleased(KeyEvent e)
     {
-        int newRow = Utility.truncate(row + yIncrement, 0, board.length - 1);
-        int newCol = Utility.truncate(col + xIncrement, 0, board[row].length - 1);
-        if (row == 0 && direction == NORTH || row == board.length-1 && direction == SOUTH || col == 0 && direction == WEST || col == board[row].length-1 && direction == EAST)
-            return true;
-        else if (board[newRow][newCol] == null)
-            return false;
-        else if (board[newRow][newCol].doesCollide())
-            return true;
-        else
-            return false;
-    }
-
-    public void updateGameState(int row, int col, GamePiece[][] board)
-    {
-        if (!collideAfterMovement(row, col, board))
-        {
-            board[row + yIncrement][col + xIncrement] = (GamePiece) this;
-            board[row][col] = null;
-        }
         reset();
     }
 
-    public void draw(int row, int col, Graphics g)
+    public void updateGameState(ArrayList<GamePiece> entities)
     {
-        int xLoc = Utility.getXOnBoard(col);
-        int yLoc = Utility.getYOnBoard(row);
+        if (!collideAfterMovement(xIncrement, yIncrement, entities))
+        {
+            xLoc += xIncrement;
+            yLoc += yIncrement;
+            updateBoundingBox(xIncrement, yIncrement);
+        }
+        //reset();
+    }
+
+    public void draw(Graphics g)
+    {
         g.setColor(playerColor);
+        g.fillOval(xLoc, yLoc, GameIO.cWidth, GameIO.cHeight);
+        /*
         int[] xLocs, yLocs;
         if (direction == NORTH)
         {
-            xLocs = Utility.addToArray(xSetNorth, xLoc);
-            yLocs = Utility.addToArray(ySetNorth, yLoc);
+        xLocs = Utility.addToArray(xSetNorth, xLoc);
+        yLocs = Utility.addToArray(ySetNorth, yLoc);
         }
         else if (direction == EAST)
         {
-            xLocs = Utility.addToArray(xSetEast, xLoc);
-            yLocs = Utility.addToArray(ySetEast, yLoc);
+        xLocs = Utility.addToArray(xSetEast, xLoc);
+        yLocs = Utility.addToArray(ySetEast, yLoc);
         }
         else if (direction == SOUTH)
         {
-            xLocs = Utility.addToArray(xSetSouth, xLoc);
-            yLocs = Utility.addToArray(ySetSouth, yLoc);
+        xLocs = Utility.addToArray(xSetSouth, xLoc);
+        yLocs = Utility.addToArray(ySetSouth, yLoc);
         }
         else
         {
-            xLocs = Utility.addToArray(xSetWest, xLoc);
-            yLocs = Utility.addToArray(ySetWest, yLoc);
+        xLocs = Utility.addToArray(xSetWest, xLoc);
+        yLocs = Utility.addToArray(ySetWest, yLoc);
         }
         g.fillPolygon(xLocs, yLocs, Math.min(xLocs.length, yLocs.length));
+         */
     }
 
     public void up()
     {
         xIncrement = 0;
-        yIncrement = -1;
+        yIncrement = -yVelv;
     }
 
     public void down()
     {
         xIncrement = 0;
-        yIncrement = 1;
+        yIncrement = yVelv;
     }
 
     public void left()
     {
-        xIncrement = -1;
+        xIncrement = -xVelv;
         yIncrement = 0;
     }
 
     public void right()
     {
-        xIncrement = 1;
+        xIncrement = xVelv;
         yIncrement = 0;
     }
 
