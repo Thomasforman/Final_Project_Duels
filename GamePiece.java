@@ -1,26 +1,83 @@
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
+import java.io.IOException;
+import javafx.geometry.BoundingBox;
+import java.util.ArrayList;
 public abstract class GamePiece
 {
     private boolean collision;
-    
-    public GamePiece()
+    protected BufferedImage image;
+    protected ArrayList<BoundingBox> bounds;
+    protected int xLoc, yLoc;
+
+    public GamePiece(String imageName)
     {
-        collision = true;
+        collision = true;	
+        try {
+            image = ImageIO.read(new File(imageName));
+        } catch (IOException e) {
+        }
+        bounds = new ArrayList<BoundingBox>();
     }
-    
+
     public void setCollision(boolean collides)
     {
         collision = collides;
     }
-    
+
     public boolean doesCollide()
     {
         return collision;
     }
-    
-    public abstract void updateGameState(int row, int col, GamePiece[][] board);
-    
-    public abstract boolean collideAfterMovement(int row, int col, GamePiece[][] board);
-    
-    public abstract void draw(int row, int col, Graphics g);
+
+    public boolean collideAfterMovement(int xIncrement, int yIncrement, ArrayList<GamePiece> entities)
+    {
+        if (xIncrement == 0 && yIncrement == 0)
+        {
+            return false;
+        }
+        for (BoundingBox b : bounds)
+        {
+            BoundingBox newBox = new BoundingBox(b.getMinX() + xIncrement, b.getMinY() + yIncrement, b.getWidth(), b.getHeight());
+            for (GamePiece g : entities)
+            {
+                if (g.doesCollide() && g != this)
+                {
+                    for (BoundingBox otherBox : g.getBounds())
+                    {
+                        if (newBox.intersects(otherBox))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public ArrayList<BoundingBox> getBounds()
+    {
+        return new ArrayList<BoundingBox>(bounds);
+    }
+
+    public void updateBoundingBox(int xIncrement, int yIncrement) //contains how the object collides
+    {
+        if (xIncrement == 0 && yIncrement == 0)
+        {
+            return;
+        }
+        for (int i = 0; i < bounds.size(); i++)
+        {
+            BoundingBox b = bounds.get(i);
+            bounds.set(i, new BoundingBox(b.getMinX() + xIncrement, b.getMinY() + yIncrement, b.getWidth(), b.getHeight()));
+        }
+    }
+
+    public abstract void updateGameState(ArrayList<GamePiece> entities);
+
+    public abstract void draw(Graphics g);
+
 }

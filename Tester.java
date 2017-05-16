@@ -4,14 +4,12 @@ public class Tester
 {
     public static void main(String[] args)
     {
+        GameIO io = new GameIO();
+        io.addPiece(new Player(0, 0, Constants.PLAYER_1, "doge.png"));
+        io.addPiece(new Player(GameWindow.WIDTH - 64, GameWindow.HEIGHT - 64, Constants.PLAYER_2, "doge.png"));
+       
         GameWindow window = new GameWindow();
-        GamePiece[][] theBoard = window.getIO().getBoard();
-        theBoard[5][5] = new Wall();
-        theBoard[5][4] = new Wall();
-        theBoard[4][5] = new Wall();
-        theBoard[4][4] = new Wall();
-        theBoard[0][0] = new Player(Player.PLAYER_1, Color.RED);
-        theBoard[theBoard.length-1][theBoard[0].length-1] = new Player(Player.PLAYER_2, Color.BLUE);
+        window.add(io);
         window.initialize();
     }
 }
