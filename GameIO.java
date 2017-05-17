@@ -6,12 +6,14 @@ import java.util.ArrayList;
 public class GameIO extends JComponent implements ActionListener, KeyListener
 {
     public static final int cWidth = 64, cHeight = 64;
-    private Timer t = new Timer(3, this);
-    private ArrayList<GamePiece> entities = new ArrayList<GamePiece>();
+    private Timer t;
+    private GameEvent event;
 
-    public GameIO()
+    public GameIO(int speed, GameEvent e)
     {
         super();
+        event = e;
+        t = new Timer(speed, this);
         t.start();
         addKeyListener(this);
         setFocusable(true);
@@ -24,73 +26,31 @@ public class GameIO extends JComponent implements ActionListener, KeyListener
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, GameWindow.WIDTH, GameWindow.HEIGHT); //draws the background
         //draws components on board
-        for (GamePiece piece : entities)
-        {
-            piece.draw(g);
-        }
-        //draws gridlines
-        /*
-        g.setColor(Color.GREEN);
-        for (int row = 0; row <= GameWindow.HEIGHT; row += cHeight)
-        {
-        g.drawLine(0, row, GameWindow.WIDTH, row);
-        }
-        for (int col = 0; col <= GameWindow.WIDTH; col += cWidth)
-        {
-        g.drawLine(col, 0, col, GameWindow.HEIGHT);
-        }
-         */
+        event.draw(g);
     }
 
     @Override
     public void keyPressed(KeyEvent e)
     {
-        for (GamePiece g : entities)
-        {
-            if (g instanceof Player)
-            {
-                ((Player) g).respondToKeyPressed(e);
-            }
-        }
+        event.respondToKeyPressed(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e)
     {
-        for (GamePiece g: entities)
-        {
-            if (g instanceof Player)
-            {
-                ((Player) g).respondToKeyReleased(e);
-            }
-        }
+        event.respondToKeyReleased(e);
     }
 
     @Override
     public void keyTyped(KeyEvent e)
     {
-
+        
     }
 
     @Override
     public void actionPerformed(ActionEvent e)
     {
         repaint();
-        for (GamePiece g : entities)
-        {
-            g.updateGameState(entities);
-        }
-    }
-
-    public void addPiece(GamePiece g)
-    {
-        if (g instanceof Player)
-        {
-            entities.add(g);
-        }
-        else
-        {
-            entities.add(0, g);
-        }
+        event.updateGameState();
     }
 }

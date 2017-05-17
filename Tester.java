@@ -4,11 +4,13 @@ public class Tester
 {
     public static void main(String[] args)
     {
-        GameIO io = new GameIO();
-        io.addPiece(new Player(0, 0, Constants.PLAYER_1, "doge.png"));
-        io.addPiece(new Player(GameWindow.WIDTH - 64, GameWindow.HEIGHT - 64, Constants.PLAYER_2, "doge.png"));
-        io.addPiece(new Wall(250, 250, ""));
-        io.addPiece(new Wall(250 + 64 + 65 + 10, 250, ""));
+        Maze maze = new Maze();
+        Player p = new Player(0, 0, Constants.PLAYER_1, "R1.png");
+        p.setSpeed(64, 64);
+        maze.addPiece(p);
+        maze.addPiece(new Wall(65, 65, ""));
+        maze.addPiece(new Wall(250 + 64 + 65 + 10, 250, ""));
+        GameIO io = new GameIO(50, maze);
         GameWindow window = new GameWindow();
         window.add(io);
         window.initialize();

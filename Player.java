@@ -8,7 +8,7 @@ import javafx.geometry.BoundingBox;
 public class Player extends GamePiece
 {
     private int health, recovery, attack;
-    private int xIncrement, yIncrement, direction;
+    private int xIncrement, yIncrement, direction, xSpeed, ySpeed;
     private Color playerColor;
     private int[] playerControls;
     private static final int[] xSetNorth = {GameIO.cWidth/2, 0, GameIO.cWidth}, xSetSouth = xSetNorth, xSetWest = {0, GameIO.cWidth, GameIO.cWidth}, xSetEast = {GameIO.cWidth, 0, 0};
@@ -107,24 +107,24 @@ public class Player extends GamePiece
     public void up()
     {
         xIncrement = 0;
-        yIncrement = -Constants.Y_VELV;
+        yIncrement = -ySpeed;
     }
 
     public void down()
     {
         xIncrement = 0;
-        yIncrement = Constants.Y_VELV;
+        yIncrement = ySpeed;
     }
 
     public void left()
     {
-        xIncrement = -Constants.X_VELV;
+        xIncrement = -xSpeed;
         yIncrement = 0;
     }
 
     public void right()
     {
-        xIncrement = Constants.X_VELV;
+        xIncrement = xSpeed;
         yIncrement = 0;
     }
 
@@ -132,6 +132,12 @@ public class Player extends GamePiece
     {
         xIncrement = 0;
         yIncrement = 0;
+    }
+
+    public void setSpeed(int xVelv, int yVelv)
+    {
+        xSpeed = xVelv;
+        ySpeed = yVelv;
     }
 
     public int getDirection()
