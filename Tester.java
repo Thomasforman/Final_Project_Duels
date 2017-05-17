@@ -6,7 +6,7 @@ public class Tester
     {
         Maze maze = new Maze();
         Player p = new Player(0, 0, Constants.PLAYER_1, "R1.png");
-        p.setSpeed(64, 64);
+        p.setSpeed(16, 16);
         maze.addPiece(p);
         maze.addPiece(new Wall(65, 65, ""));
         maze.addPiece(new Wall(250 + 64 + 65 + 10, 250, ""));

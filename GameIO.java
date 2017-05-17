@@ -23,8 +23,6 @@ public class GameIO extends JComponent implements ActionListener, KeyListener
     public void paintComponent(Graphics g)
     {
         super.paintComponent(g);
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, GameWindow.WIDTH, GameWindow.HEIGHT); //draws the background
         //draws components on board
         event.draw(g);
     }

@@ -1,23 +1,26 @@
 import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.event.*;
+import java.awt.Color;
 public abstract class GameEvent
 {
     protected ArrayList<GamePiece> entities;
-    
+
     public GameEvent()
     {
         entities = new ArrayList<GamePiece>();
     }
-    
+
     public void draw(Graphics g)
     {
+        g.setColor(Color.GREEN);
+        g.fillRect(0, 0, GameWindow.WIDTH, GameWindow.HEIGHT); //draws the background
         for (int i = entities.size() - 1; i >= 0; i--)
         {
             entities.get(i).draw(g);
         }
     }
-    
+
     public void respondToKeyPressed(KeyEvent e)
     {
         for (GamePiece g : entities)
@@ -28,7 +31,7 @@ public abstract class GameEvent
             }
         }
     }
-    
+
     public void respondToKeyReleased(KeyEvent e)
     {
         for (GamePiece g: entities)
@@ -39,7 +42,7 @@ public abstract class GameEvent
             }
         }
     }
-    
+
     public void updateGameState()
     {
         for (int i = entities.size() - 1; i >= 0; i--)
@@ -47,7 +50,7 @@ public abstract class GameEvent
             entities.get(i).updateGameState(entities);
         }
     }
-    
+
     public void addPiece(GamePiece g)
     {
         if (g instanceof Player)
