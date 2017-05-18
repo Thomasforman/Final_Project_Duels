@@ -49,6 +49,6 @@ public class GameIO extends JComponent implements ActionListener, KeyListener
     public void actionPerformed(ActionEvent e)
     {
         repaint();
-        event.updateGameState();
+        event.updateGameState(e);
     }
 }
