@@ -3,27 +3,27 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 import java.io.IOException;
-import javafx.geometry.BoundingBox;
 import java.util.ArrayList;
+import java.awt.Rectangle;
 public abstract class GamePiece
 {
     private boolean collision;
     protected BufferedImage image;
-    protected ArrayList<BoundingBox> bounds;
+    protected ArrayList<Rectangle> bounds;
     protected int xLoc, yLoc;
 
     public GamePiece(String imageName)
     {
         collision = true;	
         setImage(imageName);
-        bounds = new ArrayList<BoundingBox>();
+        bounds = new ArrayList<Rectangle>();
     }
-    
+
     public GamePiece()
     {
         collision = true;	
         setImage("");
-        bounds = new ArrayList<BoundingBox>();
+        bounds = new ArrayList<Rectangle>();
     }
 
     public void setCollision(boolean collides)
@@ -42,14 +42,15 @@ public abstract class GamePiece
         {
             return false;
         }
-        for (BoundingBox b : bounds)
+        for (Rectangle b : bounds)
         {
-            BoundingBox newBox = new BoundingBox(b.getMinX() + xIncrement, b.getMinY() + yIncrement, b.getWidth(), b.getHeight());
+            Rectangle newBox = (Rectangle) b.clone();
+            newBox.translate(xIncrement, yIncrement);
             for (GamePiece g : entities)
             {
                 if (g.doesCollide() && g != this)
                 {
-                    for (BoundingBox otherBox : g.getBounds())
+                    for (Rectangle otherBox : g.getBounds())
                     {
                         if (newBox.intersects(otherBox))
                         {
@@ -62,9 +63,9 @@ public abstract class GamePiece
         return false;
     }
 
-    public ArrayList<BoundingBox> getBounds()
+    public ArrayList<Rectangle> getBounds()
     {
-        return new ArrayList<BoundingBox>(bounds);
+        return bounds;
     }
 
     public void updateBoundingBox(int xIncrement, int yIncrement) //contains how the object collides
@@ -73,13 +74,12 @@ public abstract class GamePiece
         {
             return;
         }
-        for (int i = 0; i < bounds.size(); i++)
+        for (Rectangle b : bounds)
         {
-            BoundingBox b = bounds.get(i);
-            bounds.set(i, new BoundingBox(b.getMinX() + xIncrement, b.getMinY() + yIncrement, b.getWidth(), b.getHeight()));
+            b.translate(xIncrement, yIncrement);
         }
     }
-    
+
     public void setImage(String imageName)
     {
         try {
@@ -88,8 +88,24 @@ public abstract class GamePiece
         }
     }
 
+    public boolean collide(GamePiece other)
+    {
+        for (Rectangle myBound : bounds)
+        {
+            for (Rectangle otherBound : other.getBounds())
+            {
+                if (myBound.intersects(otherBound))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public abstract void updateGameState(ArrayList<GamePiece> entities);
 
     public abstract void draw(Graphics g);
 
+    public abstract String getName();
 }

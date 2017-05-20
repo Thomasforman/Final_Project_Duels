@@ -1,31 +1,47 @@
 import java.awt.Color;
 import java.awt.Graphics;
-public abstract class Token extends Obstacle
+import java.util.ArrayList;
+import java.awt.Rectangle;
+public class Token extends Obstacle
 {
-    public Token(String imageName)
+    public Token(int xStart, int yStart, String imageName)
     {
         super(imageName);
+        xLoc = xStart;
+        yLoc = yStart;
         setCollision(false);
+        bounds.add(new Rectangle(xStart, yStart, Constants.TILE_WIDTH-2, Constants.TILE_HEIGHT-2));
     }
-    
+
     public void doPlayerEffect(Player p)
     {
         p.addHealth(p.getHealth());
     }
-    
+
     public boolean collideAfterMovement(int row, int col, GamePiece [][] board)
     {
         return false;
     }
-    
-    public void updateGameState(int row, int col, GamePiece[][] board)
+
+    public void updateGameState(ArrayList<GamePiece> entities)
     {
-        
+        GamePiece p = entities.get(0); //must be the player
+        if (collide(p))
+        {
+            int i = 0;
+            while (entities.get(i) != this)
+                i++;
+            entities.remove(i);
+        }
     }
-    
-    public void draw(int row, int col, Graphics g)
+
+    public void draw(Graphics g)
     {
-        g.setColor(Color.magenta);
-        g.fillRect(Utility.getXOnBoard(col), Utility.getYOnBoard(row), GameIO.cWidth, GameIO.cHeight);
+        g.drawImage(image, xLoc, yLoc, null);
+    }
+
+    public String getName()
+    {
+        return "Token";
     }
 }

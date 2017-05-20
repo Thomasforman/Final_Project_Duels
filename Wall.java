@@ -1,7 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
-import javafx.geometry.BoundingBox;
+import java.awt.Rectangle;
 public class Wall extends Obstacle
 {
     public Wall(int xStart, int yStart, String imageName)
@@ -10,7 +10,7 @@ public class Wall extends Obstacle
         setCollision(true);
         xLoc = xStart;
         yLoc = yStart;
-        bounds.add(new BoundingBox(xStart, yStart, GameIO.cWidth, GameIO.cHeight));
+        bounds.add(new Rectangle(xStart, yStart, Constants.TILE_WIDTH - 2, Constants.TILE_HEIGHT - 2));
     }
 
     public void doPlayerEffect(Player p)
@@ -20,12 +20,18 @@ public class Wall extends Obstacle
 
     public void draw(Graphics g)
     {
-        g.setColor(Color.WHITE);
-        g.fillRect(xLoc, yLoc, GameIO.cWidth, GameIO.cHeight);
+        //g.setColor(Color.WHITE);
+        //g.fillRect(xLoc, yLoc, Constants.TILE_WIDTH, Constants.TILE_HEIGHT);
+        g.drawImage(image, xLoc, yLoc, null);
     }
 
     public void updateGameState(ArrayList<GamePiece> entities)
     {
 
+    }
+    
+    public String getName()
+    {
+        return "Wall";
     }
 }

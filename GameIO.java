@@ -3,9 +3,9 @@ import javax.swing.*;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.util.ArrayList;
-public class GameIO extends JComponent implements ActionListener, KeyListener
+import java.awt.Cursor;
+public class GameIO extends JComponent implements ActionListener, KeyListener, MouseListener, MouseMotionListener
 {
-    public static final int cWidth = 64, cHeight = 64;
     private Timer t;
     private GameEvent event;
 
@@ -16,6 +16,8 @@ public class GameIO extends JComponent implements ActionListener, KeyListener
         t = new Timer(speed, this);
         t.start();
         addKeyListener(this);
+        addMouseListener(this);
+        addMouseMotionListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
     }
@@ -42,7 +44,7 @@ public class GameIO extends JComponent implements ActionListener, KeyListener
     @Override
     public void keyTyped(KeyEvent e)
     {
-        
+
     }
 
     @Override
@@ -50,5 +52,54 @@ public class GameIO extends JComponent implements ActionListener, KeyListener
     {
         repaint();
         event.updateGameState(e);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e)
+    {
+        event.respondToMouseClicked(e);
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e)
+    {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e)
+    {
+        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e)
+    {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e)
+    {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e)
+    {
+        if (event.hoverOverButtons(e))
+        {
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
+        else
+        {
+            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        }
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e)
+    {
+
     }
 }

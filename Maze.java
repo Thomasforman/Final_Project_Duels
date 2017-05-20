@@ -9,46 +9,101 @@ public class Maze extends GameEvent
     public Maze()
     {
         super();
-        phase = 1;
+        phase = Constants.PHASE_1;
+        Map map = new Map();
+        map.start();
+        entities = map.convertToGamePiece();
     }
 
+    @Override
     public void draw(Graphics g)
     {
-        g.setColor(Color.GREEN);
-        g.fillRect(0, 0, GameWindow.WIDTH, GameWindow.HEIGHT); //draws the background
-        for (int i = entities.size() - 1; i >= 0; i--)
+        if (phase == Constants.PHASE_1)
         {
-            entities.get(i).draw(g);
+            g.setColor(new Color(160, 244, 0));
+            g.fillRect(0, 0, GameWindow.WIDTH, GameWindow.HEIGHT); //draws the background
+            for (int i = entities.size() - 1; i >= 0; i--)
+            {
+                entities.get(i).draw(g);
+            }
+        }
+        if (phase == Constants.PHASE_2)
+        {
+            g.setColor(Color.RED);
+            g.fillRect(0, 0, GameWindow.WIDTH, GameWindow.HEIGHT); //draws the background
+        }
+        if (phase == Constants.PHASE_3)
+        {
+            g.setColor(Color.BLUE);
+            g.fillRect(0, 0, GameWindow.WIDTH, GameWindow.HEIGHT); //draws the background
         }
     }
 
+    @Override
     public void respondToKeyPressed(KeyEvent e)
     {
-        for (GamePiece g : entities)
+        if (phase == Constants.PHASE_1)
         {
-            if (g instanceof Player)
+            for (GamePiece g : entities)
             {
-                ((Player) g).respondToKeyPressed(e);
+                if (g instanceof Player)
+                {
+                    ((Player) g).respondToKeyPressed(e);
+                }
             }
         }
     }
 
+    @Override
     public void respondToKeyReleased(KeyEvent e)
     {
-        for (GamePiece g: entities)
+        if (phase == Constants.PHASE_1)
         {
-            if (g instanceof Player)
+            for (GamePiece g: entities)
             {
-                ((Player) g).respondToKeyReleased(e);
+                if (g instanceof Player)
+                {
+                    ((Player) g).respondToKeyReleased(e);
+                }
             }
         }
     }
 
+    @Override
     public void updateGameState(ActionEvent e)
     {
-        for (int i = entities.size() - 1; i >= 0; i--)
+        boolean portalExist = false;
+        if (phase == Constants.PHASE_1)
         {
-            entities.get(i).updateGameState(entities);
+            for (int i = entities.size() - 1; i >= 0; i--)
+            {
+                GamePiece g = entities.get(i);
+                g.updateGameState(entities);
+                if (g instanceof Player && ((Player) g).getHealth() <= 0)
+                {
+                    phase = Constants.PHASE_2;
+                }
+                if (g instanceof Portal)
+                {
+                    portalExist = true;
+                }
+            }
+            if (!portalExist)
+            {
+                phase = Constants.PHASE_3;
+            }
         }
+    }
+
+    @Override
+    public void respondToMouseClicked(MouseEvent e)
+    {
+
+    }
+
+    @Override
+    public boolean hoverOverButtons(MouseEvent e)
+    {
+        return false;
     }
 }

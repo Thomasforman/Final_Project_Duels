@@ -2,9 +2,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.awt.Rectangle;
-public class Pit extends Obstacle
+public class Portal extends Obstacle
 {
-    public Pit(int xStart, int yStart, String imageName)
+    public Portal(int xStart, int yStart, String imageName)
     {
         super(imageName);
         xLoc = xStart;
@@ -15,7 +15,7 @@ public class Pit extends Obstacle
 
     public void doPlayerEffect(Player p)
     {
-        p.addHealth(-(p.getHealth()));
+
     }
 
     public boolean collideAfterMovement(int row, int col, GamePiece [][] board)
@@ -25,12 +25,13 @@ public class Pit extends Obstacle
 
     public void updateGameState(ArrayList<GamePiece> entities)
     {
-        for (GamePiece g : entities)
+        GamePiece p = entities.get(0); //must be the player
+        if (collide(p))
         {
-            if (g instanceof Player && g.collide(this))
-            {
-                doPlayerEffect((Player) g);
-            }
+            int i = 0;
+            while (entities.get(i) != this)
+                i++;
+            entities.remove(i);
         }
     }
 
@@ -38,9 +39,9 @@ public class Pit extends Obstacle
     {
         g.drawImage(image, xLoc, yLoc, null);
     }
-
+    
     public String getName()
     {
-        return "Pit";
+        return "Portal";
     }
 }
