@@ -29,9 +29,4 @@ public class Wall extends Obstacle
     {
 
     }
-    
-    public String getName()
-    {
-        return "Wall";
-    }
 }

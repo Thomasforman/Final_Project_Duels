@@ -106,6 +106,4 @@ public abstract class GamePiece
     public abstract void updateGameState(ArrayList<GamePiece> entities);
 
     public abstract void draw(Graphics g);
-
-    public abstract String getName();
 }

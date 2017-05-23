@@ -18,6 +18,4 @@ public interface Player
     int getRecovery();
     
     void setSpeed(int xSpeed, int ySpeed);
-    
-    int getPlayerNum();
 }

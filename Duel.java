@@ -27,8 +27,6 @@ public class Duel extends GameEvent
     @Override
     public void draw(Graphics g)
     {
-        g.setColor(Color.RED);
-        g.fillRect(0, 0, 512, 512); //test
         if (phase == Constants.PHASE_3)
         {
             g.drawImage(image, 0, 0, null);
@@ -115,7 +113,7 @@ public class Duel extends GameEvent
             }
         }
     }
-    
+
     public boolean hoverOverButtons(MouseEvent e)
     {
         for (Button b : buttons)
@@ -136,5 +134,15 @@ public class Duel extends GameEvent
     public void addButton(Button newButton)
     {
         buttons.add(newButton);
+    }
+    
+    private void defaultSetting()
+    {
+        addPiece(new Barrier(-2, -2, 1, GameWindow.HEIGHT+2));
+        addPiece(new Barrier(-2, -2, GameWindow.WIDTH+2, 1));
+        addPiece(new Barrier(GameWindow.WIDTH+1, -2, 1, GameWindow.HEIGHT+2));
+        addPiece(new Barrier(-2, GameWindow.HEIGHT, GameWindow.WIDTH+2, 1));
+        addPiece(new Swordsman(0, 0, Constants.PLAYER_1));
+        addPiece(new Cannoneer(GameWindow.WIDTH - Constants.TILE_WIDTH, GameWindow.HEIGHT - Constants.TILE_HEIGHT, Constants.PLAYER_2));
     }
 }

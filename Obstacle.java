@@ -5,5 +5,10 @@ public abstract class Obstacle extends GamePiece
         super(imageName);
     }
     
+    public Obstacle()
+    {
+        super();
+    }
+    
     public abstract void doPlayerEffect(Player p);
 }
