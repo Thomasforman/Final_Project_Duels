@@ -1,33 +1,52 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.awt.geom.Ellipse2D;
 public class FrameManager
 {
-  //everything to keep track
-  private JFrame frame1 = new JFrame(), frame2 = new JFrame(), frame3 = new JFrame();
-  private JFrame[] frames = {frame1, frame2, frame3};
-  
-  public void displayGUI()
-  {
-    //default settings for all frames
-    for (JFrame f : frames)
+    //everything to keep track
+    private ArrayList<GamePiece> entities;
+    private GameWindow mainFrame, battleFrame;
+    private static final int gameSpeed = 3;
+
+    public FrameManager(int width, int height)
     {
-      f.setSize(512, 512);
-      f.setLocationRelativeTo(null);
-      f.setResizable(false);
-      f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      f.setTitle("GameWindow");
+        entities = new ArrayList<GamePiece>();
+        mainFrame = new GameWindow(width, height);
+        battleFrame = new GameWindow(width, height);
+        makeList();
+        battleFrame.add(new BattleManager(3, entities));
     }
-    frame1.makeVisible(true);
-    //making the start button (press it and the game starts)
-    Custombutton startButton = new CustomButton(new Rectangle(50, 50, 50, 50));
-    startButton.addActionListener(new ActionListener()
+
+    public void displayGUI()
     {
-      public void actionPerformed(ActionEvent e)
-      {
-        frame1.makeVisible(false);
-        frame2.makeVisible(true);
-        frame3.makeVisible(false);
-      }
-    });
-    frame1.add(startButton);
-  }
+        //adds the main screen and its buttons   
+        MainScreenManager msm = new MainScreenManager(entities);
+        msm.setOpaque(true);
+        /*
+        CustomButton startButton = new CustomButton(new Rectangle(50, 50, 50, 50));
+        startButton.addActionListener(new ActionListener()
+        {
+        public void actionPerformed(ActionEvent e)
+        {
+        mainFrame.setVisible(false);
+        mainFrame.dispose();
+        battleFrame.initialize();
+        battleFrame.setVisible(true);
+        }
+        });
+        CustomButton testButton = new CustomButton(new Ellipse2D.Double(300, 300, 50, 50));
+        mainFrame.add(startButton);
+        mainFrame.add(testButton);
+         */
+        mainFrame.setContentPane(msm);
+        mainFrame.initialize();
+        mainFrame.setVisible(true);
+    }
+
+    private void makeList()
+    {
+        entities.add(new Cannoneer(0, 0, Constants.PLAYER_1));
+    }
 }

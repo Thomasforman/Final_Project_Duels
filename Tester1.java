@@ -12,8 +12,9 @@ public class Tester1
         maze.addPiece(new Wall(65, 65, ""));
         maze.addPiece(new Wall(250 + 64 + 65 + 10, 250, ""));
         GameIO io = new GameIO(100, maze);
-        GameWindow window = new GameWindow();
+        GameWindow window = new GameWindow(896, 576);
         window.add(io);
         window.initialize();
+        window.setVisible(true);
     }
 }

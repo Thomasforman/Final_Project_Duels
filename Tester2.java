@@ -1,19 +1,17 @@
 import javax.swing.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.awt.Rectangle;
 public class Tester2
 {
     public static void main(String[] args)
     {
-        Duel game = new Duel("background.jpg");
-        game.addButton(new EditButton(50, 50));
-        game.addButton(new EditButton(300, 300));
-        GameIO io = new GameIO(3, game);
-        JFrame frame = new JFrame();
-        frame.add(io);
-        frame.setSize(512, 512);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setTitle("GameWindow");
-        frame.setVisible(true);
+        ArrayList<GamePiece> entities = new ArrayList<GamePiece>();
+        MainScreenManager msm = new MainScreenManager(Utility.defaultList());
+        msm.setOpaque(true);
+        GameWindow w = new GameWindow(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+        w.setContentPane(msm);
+        w.initialize();
+        w.setVisible(true);
     }
 }

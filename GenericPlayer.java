@@ -5,11 +5,16 @@ import java.awt.Dimension;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.awt.Rectangle;
+import java.awt.Graphics2D;
 public abstract class GenericPlayer extends GamePiece implements Player
 {
     protected int attack, recovery, health;
-    private int xIncrement, yIncrement, direction, xSpeed = 1, ySpeed = 1, frameIndex;
+    private int xIncrement, yIncrement, xSpeed = 1, ySpeed = 1, frameIndex;
+    protected int direction;
+    protected long time1 = System.nanoTime(), time2 = System.nanoTime(), time3 = System.nanoTime();
+    protected long cd1, cd2, cd3;
     protected String[] frames;
+    protected String playerID;
     protected int[] playerControls;
     protected boolean keyActive1, keyActive2, keyActive3;
 
@@ -22,11 +27,13 @@ public abstract class GenericPlayer extends GamePiece implements Player
         {
             playerControls = Constants.player1Controls;
             direction = Constants.SOUTH;
+            playerID = "P1";
         }
         if (player == Constants.PLAYER_2)
         {
             playerControls = Constants.player2Controls;
             direction = Constants.NORTH;
+            playerID = "P2";
         }
         xLoc = xStart;
         yLoc = yStart;
@@ -90,20 +97,27 @@ public abstract class GenericPlayer extends GamePiece implements Player
             yLoc += yIncrement;
             updateBoundingBox(xIncrement, yIncrement);
         }
-        if (keyActive1)
+        if (keyActive1 && System.nanoTime() - time1 >= cd1)
         {
             useActive1(entities);
+            keyActive1 = false;
+            time1 = System.nanoTime();
         }
-        if (keyActive2)
+        if (keyActive2 && System.nanoTime() - time2 >= cd2)
         {
             useActive2(entities);
+            keyActive2 = false;
+            time2 = System.nanoTime();
         }
-        if (keyActive3)
+        if (keyActive3 && System.nanoTime() - time3 >= cd3)
         {
             useActive3(entities);
+            keyActive3 = false;
+            time3 = System.nanoTime();
         }
+        health += recovery;
     }
-    
+
     @Override
     public void setSpeed(int xVelv, int yVelv)
     {
@@ -114,7 +128,16 @@ public abstract class GenericPlayer extends GamePiece implements Player
     @Override
     public void draw(Graphics g)
     {
-        g.drawImage(image, xLoc, yLoc, null);
+        //g.drawImage(image, xLoc, yLoc, null);
+        g.setColor(Color.WHITE);
+        for (Rectangle b : bounds)
+        {
+            ((Graphics2D) g).draw(b);
+        }
+        int stringWidth = g.getFontMetrics().stringWidth(playerID);
+        int stringHeight = g.getFontMetrics().getHeight();
+        Rectangle box = bounds.get(0);
+        g.drawString(playerID, (int) (box.getMinX() + (box.getWidth() - stringWidth) / 2), (int) (box.getMinY() + (box.getHeight() - stringHeight) / 2));
     }
 
     public void up()
@@ -126,7 +149,7 @@ public abstract class GenericPlayer extends GamePiece implements Player
     public void down()
     {
         xIncrement = 0;
-        yIncrement = -ySpeed;
+        yIncrement = ySpeed;
     }
 
     public void left()
@@ -180,6 +203,26 @@ public abstract class GenericPlayer extends GamePiece implements Player
     public int getRecovery()
     {
         return recovery;
+    }
+
+    public boolean north()
+    {
+        return direction == Constants.NORTH;
+    }
+
+    public boolean south()
+    {
+        return direction == Constants.SOUTH;
+    }
+
+    public boolean east()
+    {
+        return direction == Constants.EAST;
+    }
+
+    public boolean west()
+    {
+        return direction == Constants.WEST;
     }
 
     public abstract void useActive1(ArrayList<GamePiece> entities);
