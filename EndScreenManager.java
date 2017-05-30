@@ -3,16 +3,71 @@ import javax.swing.*;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.util.ArrayList;
-public class EndScreenManager extends JPanel
+public class EndScreenManager extends JPanel implements ActionListener
 {
-    private ArrayList<GamePiece> entities;
-
-    public EndScreenManager(ArrayList<GamePiece> pieces)
+  private ArrayList<GamePiece> entities;
+  private static final String playAgainAction = "playAgainAction", exitAction = "exitAction";
+  
+  public EndScreenManager(ArrayList<GamePiece> pieces)
+  {
+    entities = pieces;
+    createButtons();
+  }
+  
+  @Override
+  protected void paintComponent(Graphics g)
+  {
+    super.paintComponent(g);
+    //to be completed with backgrounds
+  }
+  
+  private void createButtons()
+  {
+    JButton playAgain = new JButton("Play Again");
+    playAgain.setActionCommand(playAgainAction);
+    playAgain.addActionListener(this);
+    add(playAgain, BorderLayout.PAGE_END);
+    JButton exit = new JButton("Quit Game");
+    exit.setActionCommand(exitAction);
+    exit.addActionListener(this);
+    add(exit, BorderLayout.PAGE_END);
+    //figures out which player wins
+    Player winner = null;
+    for (GamePiece g : entities)
     {
-        entities = pieces;
+      if (g instanceof Player && ((Player) g).getHealth() > 0)
+      {
+        winner = (Player) g;
+        break;
+      }
     }
-
-    //TODO: figure out which player wins
-
-    //TODO: play again button, redirects to a new main screen
+    if (winner != null)
+    {
+      JLabel winnerLine = new JLabel("Player " + winner.getPlayerNum() + " wins!", JLabel.CENTER);
+      add(winnerLine, BorderLayout.PAGE_START);
+    }
+  }
+  
+  @Override
+  public void actionPerformed(ActionEvent e)
+  {
+    String command = e.getActionCommand();
+    if (command.equals(playAgainAction))
+    {
+      setEnabled(false);
+      JFrame parent = (JFrame) getTopLevelAncestor();
+      parent.remove(this);
+      parent.setVisible(false);
+      parent.dispose();
+      Tester2.main({});
+    }
+    if (command.equals(exitAction))
+    {
+      setEnabled(false);
+      JFrame parent = (JFrame) getTopLevelAncestor();
+      parent.remove(this);
+      parent.setVisible(false);
+      parent.dispose();
+    }
+  }
 }
