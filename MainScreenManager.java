@@ -28,6 +28,12 @@ public class MainScreenManager extends JPanel implements ActionListener
         super.paintComponent(g);
         
     }
+    
+    @Overide
+    public Dimension getPreferredSize()
+    {
+      return new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+    }
 
     public void createButtons() //call after added to JFrame
     {
@@ -63,7 +69,7 @@ public class MainScreenManager extends JPanel implements ActionListener
         {
             setEnabled(false);
             BattleManager bm = new BattleManager(3, entities);
-            GameWindow w = new GameWindow(getWidth(), getHeight());
+            GameWindow w = new GameWindow();
             w.setContentPane(bm);
             w.initialize();
             w.setVisible(true);
